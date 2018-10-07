@@ -1,61 +1,89 @@
 <html>
- <head>
-    <style type="text/css">
-    	body { margin: 0; }
-		canvas { border: 1px solid #aaa; position: fixed; }
-    </style>
- </head>
- <body>
-   <canvas id="canvas"></canvas>
-   <script type="text/javascript">
-	var canvas = document.getElementById('canvas');
-	var ctx = canvas.getContext('2d');
-	var mx = 0, my = 0;
-	var lastMx = 0; lastMy = 0;
 
-	window.onload = window.onresize = function() {
-		canvas.setAttribute("width", window.innerWidth);
-		canvas.setAttribute("height", window.innerHeight);
-		mx = lastMx = window.innerWidth / 2;
-		my = lastMy = window.innerHeight / 2;
-	};
-	window.onload();
-	draw();
+<head>
+  <style type="text/css">
+    body {
+      margin: 0;
+      cursor: url(pusheen.png) 50 10, auto;
+    }
 
-	canvas.onmousemove = function (e) {
-		mx = e.clientX - canvas.offsetLeft;
-		my = e.clientY - canvas.offsetTop;
-	};
+    canvas {
+      border: 1px solid #aaa;
+      position: fixed;
+    }
 
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+    .heart {
+      margin-left: -11.5px;
+      width: 20px;
+      position: fixed;
+      margin-top: -11.5px;
+    } 
+  </style>
+</head>
 
-	var t = 0;
-	var w, x, y, lastX, lastY;
-	function draw() {
-		ctx.beginPath();
-		ctx.moveTo(lastX, lastY);
-		ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
+<body>
+  <canvas id="canvas"></canvas>
+  <script type="text/javascript">
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    var mx = 0, my = 0;
+    var lastMx = 0; lastMy = 0;
 
-		for (var i = 0; i < 1; i += 0.1) {
-			w = t + i/5;
-			x = lastMx * (1-i) + mx * i + 100 * (2 * Math.sin(w) - Math.sin(2 * w))
-			y = lastMy * (1-i) + my * i + 100 * (Math.cos(2 * w) - 1.5 * Math.cos(w))
-			ctx.lineTo(x, y);
-		}
+    window.onload = window.onresize = function () {
+      canvas.setAttribute("width", window.innerWidth);
+      canvas.setAttribute("height", window.innerHeight);
+      mx = lastMx = window.innerWidth / 2;
+      my = lastMy = window.innerHeight / 2;
+    };
+    window.onload();
+    draw();
 
-		ctx.lineWidth = 5;
-		ctx.strokeStyle = "hsl(" + (t * 10) + ", 80%, 70%)";
-		ctx.stroke();
+    const hearts = [];
+    canvas.onclick = function(e) {
+      const img = new Image();
+      img.src = 'heart.png';
+      img.classList.add('heart')
+      img.style.top = e.clientY;
+      img.style.left = e.clientX;
+      document.body.appendChild(img);
+      hearts.push(img);
+    }
 
-		lastX = x;
-		lastY = y;
-		lastMx = mx;
-		lastMy = my;
-		t += 0.2
+    canvas.onmousemove = function (e) {
+      mx = e.clientX - canvas.offsetLeft;
+      my = e.clientY - canvas.offsetTop;
+    };
 
-		requestAnimationFrame(draw);
-	};
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    var t = 0;
+    var w, x, y, lastX, lastY;
+    function draw() {
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (var i = 0; i < 1; i += 0.1) {
+        w = t + i / 5;
+        x = lastMx * (1 - i) + mx * i + 100 * (2 * Math.sin(w) - Math.sin(2 * w))
+        y = lastMy * (1 - i) + my * i + 100 * (Math.cos(2 * w) - 1.5 * Math.cos(w))
+        ctx.lineTo(x, y);
+      }
+
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = "hsl(" + (t * 10) + ", 80%, 70%)";
+      ctx.stroke();
+
+      lastX = x;
+      lastY = y;
+      lastMx = mx;
+      lastMy = my;
+      t += 0.2
+
+      requestAnimationFrame(draw);
+    };
   </script>
- </body>
+</body>
+
 </html>
