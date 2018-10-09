@@ -21,6 +21,16 @@
 <body>
   <canvas id="canvas"></canvas>
   <script type="text/javascript">
+    document.addEventListener('contextmenu', (event) => event.preventDefault());
+    document.addEventListener('mousedown', (event) => {
+      const img = new Image();
+      img.src = 'heart_small.png';
+      img.classList.add('heart')
+      img.style.top = event.clientY + 1;
+      img.style.left = event.clientX + 1;
+      document.body.appendChild(img);
+    });
+
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
     var mx = 0, my = 0;
@@ -34,17 +44,6 @@
     };
     window.onload();
     draw();
-
-    const hearts = [];
-    canvas.onclick = function(e) {
-      const img = new Image();
-      img.src = 'heart.png';
-      img.classList.add('heart')
-      img.style.top = e.clientY;
-      img.style.left = e.clientX;
-      document.body.appendChild(img);
-      hearts.push(img);
-    }
 
     canvas.onmousemove = function (e) {
       mx = e.clientX - canvas.offsetLeft;
