@@ -71,11 +71,17 @@
     function draw() {
       ctx.beginPath();
       ctx.moveTo(lastX, lastY);
-      ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
+      ctx.fillStyle = "rgba(230, 200, 198, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+      ctx.fillRect(0, 20, 20, canvas.height - 40);
+      ctx.fillRect(canvas.width, 20, -20, canvas.height - 40);
+      ctx.fillRect(0, 0, canvas.width, 20);
+      ctx.fillRect(0, canvas.height, canvas.width, -20);
+
       for (var i = 0; i < 1; i += 0.1) {
-        w = t + i / 5;
+        w = t + i / 10;
         x = lastMx * (1 - i) + mx * i + 100 * (2 * Math.sin(w) - Math.sin(2 * w))
         y = lastMy * (1 - i) + my * i + 100 * (Math.cos(2 * w) - 1.5 * Math.cos(w))
         ctx.lineTo(x, y);
@@ -89,7 +95,7 @@
       lastY = y;
       lastMx = mx;
       lastMy = my;
-      t += 0.2
+      t += 0.1
 
       requestAnimationFrame(draw);
     };
