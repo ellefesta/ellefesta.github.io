@@ -2,6 +2,7 @@
 <head>
   <title>Elle's Corner</title>
   <link rel="shortcut icon" href="heart.png" />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/matter-js/0.12.0/matter.js"></script>
   <style type="text/css">
     body {
       margin: 0;
@@ -12,26 +13,30 @@
       border: 1px solid #aaa;
       position: fixed;
     }
-
-    .heart {
-      margin-left: -11.5px;
-      position: fixed;
-      margin-top: -11.5px;
-    }
   </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
   <script type="text/javascript">
-    document.addEventListener('contextmenu', (event) => event.preventDefault());
-    document.addEventListener('mousedown', (event) => {
-      const img = new Image();
-      img.src = 'heart_small.png';
-      img.classList.add('heart')
-      img.style.top = event.clientY + 1;
-      img.style.left = event.clientX + 1;
-      document.body.appendChild(img);
+    var engine = Matter.Engine.create();
+    var render = Matter.Render.create({
+        element: document.body,
+        engine: engine,
+        options: {
+          width: window.innerWidth,
+          height: window.innerHeight,
+          wireframes: false,
+          background: 'transparent',
+          // wireframeBackground: 'transparent',
+        },
     });
+    var ground = Matter.Bodies.rectangle(
+      window.innerWidth/2, window.innerHeight + 10,
+      window.innerWidth, 20,
+      {isStatic: true});
+    Matter.World.add(engine.world, [ground]);
+    Matter.Engine.run(engine);
+    Matter.Render.run(render);
 
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
@@ -47,12 +52,19 @@
     window.onload();
     draw();
 
-    canvas.onmousemove = function (e) {
+    document.addEventListener('contextmenu', (event) => event.preventDefault());
+    document.addEventListener('mousedown', (e) => {
+      const heart = Matter.Bodies.circle(e.clientX, e.clientY, 8,
+        {render: {sprite: {texture: 'heart_small.png'}}});
+      const direction = e.button - 1;
+      Matter.Body.setVelocity(heart, {x: direction * 3, y: -7})
+      // Matter.Body.setAngularVelocity(heart, direction / 10)
+      Matter.World.addBody(engine.world, heart);
+    });
+    document.addEventListener('mousemove', (e) => {
       mx = e.clientX - canvas.offsetLeft;
       my = e.clientY - canvas.offsetTop;
-    };
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
 
     var t = 0;
     var w, x, y, lastX, lastY;
